@@ -47,4 +47,11 @@ print('Biggest Files: (to see more specify --results argument)')
 for i in range(args.result_count):
 	if i > len(discoveredFiles)-1:
 		break
-	print(f'{i+1}. {discoveredFiles[i]["file"]} : {prettySize(discoveredFiles[i]["size"])}')	
+	print(f'{i+1}. {discoveredFiles[i]["file"]} : {prettySize(discoveredFiles[i]["size"])}')
+
+if inaccessible:
+	print('\nInaccessible files (not sure how big they are):')
+	for index, i in enumerate(inaccessible):
+		print(f'{index+1}. {i}')
+		if index == 9:
+			input(f'There\'s more. {len(inaccessible) - index} inaccessible files remaining. Press enter to list them all.')
