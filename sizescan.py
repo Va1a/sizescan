@@ -2,7 +2,6 @@
 
 import os
 import argparse
-import math
 from colorama import init, Fore, Back, Style
 from halo import Halo
 
