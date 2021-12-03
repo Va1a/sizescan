@@ -3,8 +3,10 @@
 import os
 import argparse
 import math
+from colorama import init, Fore, Back, Style
 from halo import Halo
 
+init(autoreset=True)
 spinner = Halo(spinner='dots', text='Initializing')
 parser = argparse.ArgumentParser(description='Look for the largest files.')
 parser.add_argument('path', metavar='path', type=str, help='Path to look inside.')
@@ -16,7 +18,7 @@ inaccessible = []
 
 def traverse(folder):
 	for root, dirs, files in os.walk(folder):
-		spinner.text = f'Searching {root}...'
+		spinner.text = f'{Fore.MAGENTA}Searching {Fore.WHITE}{root}...'
 		for file in files:
 			try:
 				discoveredFiles.append({'file': os.path.join(root, file), 'size': int(os.path.getsize(os.path.join(root, file)))})
@@ -40,18 +42,19 @@ while dirqueue:
 	for directory in dirqueue:
 		dirqueue.extend(traverse(directory))
 		dirqueue.remove(directory)
-spinner.text = 'Sorting...'
+spinner.text = f'{Fore.YELLOW}Sorting...'
 discoveredFiles.sort(key=lambda item: item['size'], reverse=True)
-spinner.succeed('Searched & Sorted!\n')
-print('Biggest Files: (to see more specify --results argument)')
+spinner.succeed(f'{Fore.GREEN}Searched & Sorted!\n')
+print(f'{Style.BRIGHT}{Fore.WHITE}Biggest Files: {Fore.YELLOW}(to see more specify --results argument)')
 for i in range(args.result_count):
 	if i > len(discoveredFiles)-1:
 		break
-	print(f'{i+1}. {discoveredFiles[i]["file"]} : {prettySize(discoveredFiles[i]["size"])}')
+	print(f'{Fore.CYAN}{i+1}. {Fore.WHITE}{discoveredFiles[i]["file"]} {Fore.CYAN}: {Fore.RED}{prettySize(discoveredFiles[i]["size"])}')
 
 if inaccessible:
-	print('\nInaccessible files (not sure how big they are):')
+	input(f'{Fore.YELLOW}Inaccessible files encountered. Press enter to view.')
+	print(f'\n{Style.BRIGHT}{Fore.WHITE}Inaccessible files {Fore.YELLOW}(not sure how big they are):')
 	for index, i in enumerate(inaccessible):
-		print(f'{index+1}. {i}')
+		print(f'{Fore.CYAN}{index+1}. {Fore.WHITE}{i}')
 		if index == 9:
-			input(f'There\'s more. {len(inaccessible) - index} inaccessible files remaining. Press enter to list them all.')
+			input(f'{Fore.YELLOW}There\'s more. {len(inaccessible) - index} inaccessible files remaining. Press enter to list them all.')
